@@ -40,10 +40,14 @@ def select_gender
 
   case gender
   when 1
+    puts "Thank you Sir"
     "Male"
+
   when 2
+    puts "Thank you"
     "Female"
   when 3
+    puts "Thank you"
     "Other"
   else
     "Invalid selection. Please select 1, 2, or 3."
