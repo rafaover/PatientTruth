@@ -5,8 +5,6 @@
 
 require 'ruby/openai'
 
-  private
-
 API_KEY = "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"
 SYMPTOMS = ["Headache", "Fever", "Fatigue", "Nausea", "Vomiting",
   "Chest pain", "Abdominal pain", "Joint pain", "Muscle pain", "Back pain",
@@ -55,7 +53,7 @@ def select_gender
 end
 
 def select_body_parts
-  puts "Please select the body parts where you are feeling symptoms (use the corresponding number). When you're done
+  puts "Please select the body parts where you are feeling symptoms(use the corresponding number). When you're done
   write 'done':"
 
   BODY_PARTS.each_with_index do |part, index|
@@ -63,13 +61,21 @@ def select_body_parts
   end
 
   selected_body_parts = []
-  loop
+  while true
   user_input = gets.chomp
   break if user_input == "done"
 
   selected_body_part = body_parts[user_input.to_i - 1]
   selected_body_parts << selected_body_part if selected_body_part
   selected_body_parts.join(", ")
+end
+
+def list_symptoms
+  puts "Please select the symptoms you're experiencing, by entering their
+  corresponding index number:"
+  SYMPTOMS.each_with_index do |symptom, index|
+    puts "#{index + 1}. #{symptom}"
+  end
 end
 
 def select_symptoms
@@ -87,6 +93,29 @@ def select_symptoms
   selected_symptoms.join(", ")
 end
 
+def pain_presence
+  puts "Are you feeling any type of pain? yes or no."
+  gets.chomp.downcase
+end
+
+def body_parts_with_pain
+  puts "Where you're feeling pain? When you're done
+  write 'done':"
+
+  BODY_PARTS.each_with_index do |part, index|
+    puts "#{index + 1}. #{part}"
+  end
+
+  selected_body_parts = []
+  loop
+  user_input = gets.chomp
+  break if user_input == "done"
+
+  selected_body_part = body_parts[user_input.to_i - 1]
+  selected_body_parts << selected_body_part if selected_body_part
+  selected_body_parts.join(", ")
+end
+
 def input_pain_level
   puts "Please enter your pain level on a scale of 1 to 10:"
   pain_level = gets.chomp.to_i
@@ -99,14 +128,22 @@ def input_pain_start
   gets.chomp
 end
 
-def list_symptoms
-  puts "Please select the symptoms you're experiencing, by entering their
-  corresponding index number:"
-  SYMPTOMS.each_with_index do |symptom, index|
-    puts "#{index + 1}. #{symptom}"
-  end
+def text_build_no_pain(symptoms, body_parts)
+  "Could you write a document where I'm telling my GP that I have
+  #{symptoms}, in my #{body_parts}."
 end
 
+def text_build_with_pain(
+  symptoms,
+  body_parts,
+  pain_start,
+  pain_level,
+  body_pain
+)
+  "Could you write a document where I'm telling my GP that I have
+  #{symptoms}, in my #{body_parts}, pain started #{pain_start}, with pain level
+  #{pain_level} in these body parts #{body_pain}."
+end
 # patient_letter("Could you write a letter to my GP saying I'm feeling pain, around
 #   level 5, in my left arm, for the last 7 days. Started after a hike, I'm also
 #   feeling tired and pounding headaches.")
