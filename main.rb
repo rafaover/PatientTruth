@@ -2,6 +2,7 @@
 # rubocop:disable Metrics/AbcSize
 # rubocop:disable Style/StringLiterals
 # rubocop:disable Style/StringLiteralsInInterpolation
+# rubocop:disable Metrics/ClassLength
 
 require 'ruby/openai'
 
@@ -63,21 +64,22 @@ class Model
 
     selected_body_parts = []
     while true
-    user_input = gets.chomp
-    break if user_input == "done"
-    end
+      user_input = gets.chomp
+      break if user_input == "done"
 
-    selected_body_part = body_parts[user_input.to_i - 1]
-    selected_body_parts << selected_body_part if selected_body_part
+      selected_body_part = BODY_PARTS[user_input.to_i - 1]
+      selected_body_parts << selected_body_part if selected_body_part
+    end
     selected_body_parts.join(", ")
   end
 
   def self.list_symptoms
     puts "Please select the symptoms you're experiencing, by entering their
-    corresponding index number:"
+    corresponding index number with a comma between it:"
     SYMPTOMS.each_with_index do |symptom, index|
       puts "#{index + 1}. #{symptom}"
     end
+    puts " "
   end
 
   def self.select_symptoms
@@ -86,7 +88,7 @@ class Model
     while selected_symptoms.empty?
       selected_indexes = gets.chomp.split(',').map(&:to_i)
       selected_indexes.each do |index|
-        selected_symptoms << symptoms[index - 1] if index >= 1 && index <= symptoms.length
+        selected_symptoms << selected_indexes[index - 1] if index >= 1 && index <= selected_indexes.length
       end
       puts "Select at least one symptom" if selected_symptoms.empty?
     end
@@ -101,8 +103,7 @@ class Model
   end
 
   def self.body_parts_with_pain
-    puts "Where you're feeling pain? When you're done
-    write 'done':"
+    puts "Choose a part where you're feeling the most pain? When you're done write 'done':"
 
     BODY_PARTS.each_with_index do |part, index|
       puts "#{index + 1}. #{part}"
@@ -114,7 +115,7 @@ class Model
       break if user_input == "done"
     end
 
-    selected_body_part = body_parts[user_input.to_i - 1]
+    selected_body_part = BODY_PARTS[user_input.to_i - 1]
     selected_body_parts << selected_body_part if selected_body_part
     selected_body_parts.join(", ")
   end
