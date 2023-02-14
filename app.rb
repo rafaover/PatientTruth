@@ -1,22 +1,22 @@
 require_relative 'main'
 
-puts "Let's start the process. The idea is to build a document with your
-own choices. Comunication is a big issue when you're dealing with a subject
-you have no domain. Let's try to make it clear."
+puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+puts "Let's start the process. The idea is to build a document with your own choices. Comunication is a big issue when you're dealing with a subject you have no domain. Let's try to make it clear."
+puts " "
 
-select_gender
-symptoms = select_symptoms
-body_parts = select_body_parts
-pain = pain_presence
+Model.select_gender
+symptoms = Model.select_symptoms
+body_parts = Model.select_body_parts
+pain = Model.pain_presence
 
 case pain
 when "yes"
-  pain_level = input_pain_level
-  pain_start = input_pain_start
-  body_pain = body_parts_with_pain
+  pain_level = Model.input_pain_level
+  pain_start = Model.input_pain_start
+  body_pain = Model.body_parts_with_pain
   puts "Thank you, lets generate your document"
-  patient_letter(
-    text_build_with_pain(
+  Model.patient_letter(
+    Model.text_build_with_pain(
       symptoms,
       body_parts,
       pain_start,
@@ -26,5 +26,5 @@ when "yes"
   )
 when "no"
   puts "Thank you, lets generate your document"
-  patient_letter(text_build_no_pain(symptoms, body_parts))
+  Model.patient_letter(Model.text_build_no_pain(symptoms, body_parts))
 end
