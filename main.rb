@@ -12,6 +12,9 @@ SYMPTOMS = ["Headache", "Fever", "Fatigue", "Nausea", "Vomiting",
   "Chest pain", "Abdominal pain", "Joint pain", "Muscle pain", "Back pain",
   "Shortness of breath", "Cough", "Sore throat", "Runny nose", "Diarrhea",
   "Constipation", "Rash", "Numbness", "Tingling", "Blurred vision"]
+BODY_PARTS = ["Head", "Neck", "Shoulder", "Back", "Chest", "Abdomen", "Hips",
+  "Thighs", "Knees", "Calves", "Ankles", "Feet", "Wrists", "Hands", "Elbows",
+  "Arms", "Shoulders", "Stomach", "Groin"]
 
 def patient_letter(text)
   client = OpenAI::Client.new(access_token: API_KEY)
@@ -47,24 +50,37 @@ def select_gender
   end
 end
 
-def selecting_body_part
-  body_parts = %w(Head Neck Chest LeftArm RightArm RightLeg LeftLeg Eyes )
+def select_body_parts
+  puts "Please select the body parts where you are feeling symptoms (use the corresponding number). When you're done
+  write 'done':"
 
-  puts "Please select a body part:"
-
-  body_parts.each_with_index do |body_part, index|
-    puts "#{index + 1}. #{body_part}"
-  end
-  body_part_choice = gets.chomp.to_i
-
-  if (1..body_parts.length).cover?(body_part_choice)
-    selected_body_part = body_parts[body_part_choice - 1]
-    puts "You selected: #{selected_body_part}"
-  else
-    puts "Invalid selection. Please try again."
+  BODY_PARTS.each_with_index do |part, index|
+    puts "#{index + 1}. #{part}"
   end
 
-  selected_body_part
+  selected_body_parts = []
+  loop
+  user_input = gets.chomp
+  break if user_input == "done"
+
+  selected_body_part = body_parts[user_input.to_i - 1]
+  selected_body_parts << selected_body_part if selected_body_part
+  selected_body_parts.join(", ")
+end
+
+def select_symptoms
+  list_symptoms
+  selected_symptoms = []
+  while selected_symptoms.empty?
+    selected_indexes = gets.chomp.split(',').map(&:to_i)
+    selected_indexes.each do |index|
+      selected_symptoms << symptoms[index - 1] if index >= 1 && index <= symptoms.length
+    end
+    puts "Select at least one symptom" if selected_symptoms.empty?
+  end
+
+  puts "You selected: #{selected_symptoms.join(", ")}"
+  selected_symptoms.join(", ")
 end
 
 def input_pain_level
@@ -85,21 +101,6 @@ def list_symptoms
   SYMPTOMS.each_with_index do |symptom, index|
     puts "#{index + 1}. #{symptom}"
   end
-end
-
-def select_symptoms
-  list_symptoms
-  selected_symptoms = []
-  while selected_symptoms.empty?
-    selected_indexes = gets.chomp.split(',').map(&:to_i)
-    selected_indexes.each do |index|
-      selected_symptoms << symptoms[index - 1] if index >= 1 && index <= symptoms.length
-    end
-    puts "Select at least one symptom" if selected_symptoms.empty?
-  end
-
-  puts "You selected: #{selected_symptoms.join(", ")}"
-  selected_symptoms.join(", ")
 end
 
 # patient_letter("Could you write a letter to my GP saying I'm feeling pain, around
