@@ -31,6 +31,11 @@ class Model
     puts response['choices'][0]['text']
   end
 
+  def self.patient_name
+    puts "Please, could you write your name?"
+    gets.chomp.capitalize
+  end
+
   def self.select_gender
     puts "Select your gender:"
     puts "1. Male"
@@ -132,17 +137,18 @@ class Model
     gets.chomp
   end
 
-  def self.text_build_no_pain(symptoms, body_parts)
-    "Could you write a document where I'm telling my GP that I have #{symptoms}, in my #{body_parts}."
+  def self.text_build_no_pain(name,symptoms, body_parts)
+    "Hello, my name is #{name}. Could you write a document where I'm telling my GP that I have #{symptoms}, in my #{body_parts}."
   end
 
   def self.text_build_with_pain(
+    name,
     symptoms,
     body_parts,
     pain_start,
     pain_level,
     body_pain
   )
-    "Could you write a document where I'm telling my GP that I have #{symptoms}, in my #{body_parts}, pain started #{pain_start}, with pain level #{pain_level} in these body parts #{body_pain}."
+    "Hello, my name is #{name}. Could you write a document where I'm telling my GP that I have #{symptoms}, in my #{body_parts}, pain started #{pain_start}, with pain level #{pain_level} in these body parts #{body_pain}."
   end
 end
